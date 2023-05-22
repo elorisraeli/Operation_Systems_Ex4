@@ -37,3 +37,5 @@ the communication done using IPv4 TCP protocol.
 >
 > and now each side can send messages throw the keyboard and press enter to sent to other clients.
 
+To quit (exit) from the chat program, press CTRL+C
+
