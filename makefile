@@ -1,21 +1,19 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -std=c11 -fPIC -D_GNU_SOURCE
-LDFLAGS = -shared
+LFLAGS = -shared
 
-.PHONY: all clean default
+all: reactor server client
 
-default: all
-
-all: react_server client
-
-react_server: selectserver.c libst_reactor.so
-	$(CC) $(CFLAGS) -o react_server selectserver.c -L. -lst_reactor -lpthread -ldl -Wl,-rpath,'$$ORIGIN'
+server: selectserver.c
+	$(CC) -o react_server selectserver.c -L. -lst_reactor -lpthread
 
 client: client.c
-	$(CC) $(CFLAGS) -o client client.c -ldl -Wl,-rpath,'$$ORIGIN'
+	$(CC) -o client client.c
 
-libst_reactor.so: st_reactor.c
-	$(CC) $(CFLAGS) $(LDFLAGS) -o libst_reactor.so st_reactor.c
+reactor: st_reactor.c st_reactor.h
+	$(CC) -c -fPIC st_reactor.c -o st_reactor.o
+	$(CC) $(LFLAGS) -o libst_reactor.so st_reactor.o
+
+.PHONY: all clean
 
 clean:
-	rm -f react_server client libst_reactor.so *.txt
+	rm -f *.o *.so react_server client
