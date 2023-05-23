@@ -2,7 +2,7 @@
 
 #define MAX_FDS 1024 // Arbitrary maximum number of file descriptors
 
-reactor_t* createReactor() {
+void* createReactor() {
     reactor_t* reactor = malloc(sizeof(reactor_t));
     if (reactor == NULL) {
         return NULL; // Allocation failed
@@ -18,7 +18,8 @@ reactor_t* createReactor() {
     return reactor;
 }
 
-void stopReactor(reactor_t* reactor) {
+void stopReactor(void* this) {
+    reactor_t* reactor = (reactor_t *) this;
     if (reactor == NULL || !reactor->running) {
         return;
     }
@@ -27,7 +28,8 @@ void stopReactor(reactor_t* reactor) {
     pthread_join(reactor->thread, NULL); // Wait for the reactor thread to exit
 }
 
-void startReactor(reactor_t* reactor) {
+void startReactor(void* this) {
+    reactor_t* reactor = (reactor_t *) this;
     if (reactor == NULL || reactor->running) {
         return;
     }
@@ -36,7 +38,8 @@ void startReactor(reactor_t* reactor) {
     pthread_create(&reactor->thread, NULL, reactor_run, reactor);
 }
 
-void addFd(reactor_t* reactor, int fd, handler_t handler) {
+void addFd(void* this, int fd, handler_t handler) {
+    reactor_t *reactor = (reactor_t *)this;
     if (reactor == NULL || fd < 0 || fd >= MAX_FDS || handler == NULL) {
         return;
     }
@@ -49,7 +52,8 @@ void addFd(reactor_t* reactor, int fd, handler_t handler) {
     }
 }
 
-void waitFor(reactor_t* reactor) {
+void waitFor(void* this) {
+    reactor_t *reactor = (reactor_t *)this;
     if (reactor == NULL || !reactor->running) {
         return;
     }

@@ -20,11 +20,11 @@ typedef struct reactor_t {
 } reactor_t;
 
 // Function prototypes
-reactor_t* createReactor();
-void stopReactor(reactor_t* reactor);
-void startReactor(reactor_t* reactor);
-void addFd(reactor_t* reactor, int fd, handler_t handler);
-void waitFor(reactor_t* reactor);
+void* createReactor();
+void stopReactor(void* this);
+void startReactor(void* this);
+void addFd(void* this, int fd, handler_t handler);
+void waitFor(void* this);
 void* reactor_run(void* arg);
 void removeFd(reactor_t* reactor, int fd);
 
